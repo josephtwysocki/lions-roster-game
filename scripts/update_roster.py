@@ -84,6 +84,7 @@ def get_headshot_url(row):
 def download_headshot(player_name, headshot_url):
     """
     Download a headshot only if it doesn't already exist.
+    Return only the filename for storage in the roster CSV.
     """
 
     if not headshot_url:
@@ -94,7 +95,7 @@ def download_headshot(player_name, headshot_url):
 
     # Do not redownload an existing photo
     if filepath.exists():
-        return str(filepath)
+        return filename
 
     response = session.get(
         headshot_url,
@@ -107,7 +108,7 @@ def download_headshot(player_name, headshot_url):
 
     print(f"Downloaded headshot: {player_name}")
 
-    return str(filepath)
+    return filename
 
 def scrape_current_roster():
 
@@ -266,7 +267,9 @@ def update_roster():
         old_headshots = dict(
             zip(
                 previous_df["profile_url"],
-                previous_df["headshot_file"]
+                previous_df["headshot_file"].apply(
+                    lambda x: Path(x).name if x else ""
+                )
             )
         )
 
@@ -308,7 +311,7 @@ def update_roster():
         elif not existing_file:
             needs_download = True
 
-        elif not Path(existing_file).exists():
+        elif not (HEADSHOT_DIR / existing_file).exists():
             needs_download = True
 
 
