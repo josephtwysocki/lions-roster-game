@@ -15,14 +15,16 @@ from bs4 import BeautifulSoup
 ROSTER_URL = "https://www.detroitlions.com/team/players-roster/"
 
 DATA_DIR = Path("lions_roster_data")
-HEADSHOT_DIR = DATA_DIR / "headshots"
+WEB_PUBLIC_DIR = Path("web") / "public"
+HEADSHOT_DIR = WEB_PUBLIC_DIR / "headshots"
 
-ACTIVE_ROSTER_FILE = DATA_DIR / "active_roster.csv"
+ACTIVE_ROSTER_FILE = WEB_PUBLIC_DIR / "data" / "active_roster.csv"
 DAILY_LOG_FILE = DATA_DIR / "roster_daily_log.csv"
 CHANGES_FILE = DATA_DIR / "roster_changes.csv"
 
-DATA_DIR.mkdir(exist_ok=True)
-HEADSHOT_DIR.mkdir(exist_ok=True)
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+ACTIVE_ROSTER_FILE.parent.mkdir(parents=True, exist_ok=True)
+HEADSHOT_DIR.mkdir(parents=True, exist_ok=True)
 
 
 HEADERS = {
